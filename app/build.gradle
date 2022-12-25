@@ -40,4 +40,17 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+
+
+    //retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    //支持lifecycleScope
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+    //支持MoshiConverterFactory
+    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+    //moshi
+    implementation "com.squareup.moshi:moshi:1.13.0"
+    //mosi支持KotlinJsonAdapterFactory 更为准确的空安全，可以更好地处理KClass，当进行反序列化为KClass时，
+    //如果filed是Nullable类型，则可以填入Null，如果是NonNull类型，则在填入Null时会立即抛出异常，将NPE暴露在早期
+    implementation "com.squareup.moshi:moshi-kotlin:1.13.0"
 }
