@@ -1,5 +1,6 @@
 package org.phcbest.ezandroid
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -31,6 +32,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var registerForActivityResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+
+        }
         Log.i(
             TAG, "startSingleImageSelect: 成功获得图片回调"
         )
