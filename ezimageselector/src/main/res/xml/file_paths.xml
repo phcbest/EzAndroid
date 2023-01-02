@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?><!--内容提供者的路径-->
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-files-path
+        name="take_camera_photo"
+        path="." />
+</paths>

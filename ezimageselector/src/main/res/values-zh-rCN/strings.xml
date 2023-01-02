@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="all_photo">所有图片</string>
+    <string name="certain">确定</string>
+    <string name="plz_select_photo">请选择你的照片</string>
+    <string name="takePhotoError">获取照片出现问题</string>
+</resources>

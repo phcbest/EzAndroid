@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="all_photo">All Photo</string>
+    <string name="certain">Certain</string>
+    <string name="plz_select_photo">plz select you photo</string>
+    <string name="takePhotoError">take photo error</string>
+</resources>

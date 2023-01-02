@@ -10,6 +10,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/EzImageSelector" />
             <option value="$PROJECT_DIR$/EzPermissions" />
             <option value="$PROJECT_DIR$/app" />
           </set>
