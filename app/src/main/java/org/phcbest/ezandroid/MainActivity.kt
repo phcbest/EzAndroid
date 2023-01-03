@@ -1,6 +1,5 @@
 package org.phcbest.ezandroid
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import org.phcbest.ezandroid.demo.EzHttp.EzHttpActivity
 import org.phcbest.ezimageselector.EzImageLauncher
+import org.phcbest.ezimageselector.EzSingleImageSelectorActivity
 
 private const val TAG = "MainActivity"
 
@@ -32,13 +32,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var registerForActivityResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-
+        if (result.resultCode != EzSingleImageSelectorActivity.RESULT_CODE) {
+            return@registerForActivityResult
         }
-        Log.i(
-            TAG, "startSingleImageSelect: 成功获得图片回调"
-        )
         val data: Intent? = result.data
+        val uri = data?.getStringExtra(EzSingleImageSelectorActivity.IMAGE_URI)
+        Log.i(
+            TAG, "startSingleImageSelect: 成功获得图片回调${uri}"
+        )
     }
 
     override fun onClick(v: View?) {
