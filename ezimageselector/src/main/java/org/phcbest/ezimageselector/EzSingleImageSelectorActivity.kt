@@ -3,8 +3,8 @@ package org.phcbest.ezimageselector
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -35,18 +35,19 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 
-open class EzImageSelectorActivity : AppCompatActivity() {
+open class EzSingleImageSelectorActivity : AppCompatActivity() {
 
     companion object {
         const val RESULT_CODE = 99999
-        val REQUEST_IMAGE_CAPTURE = 11999
+        const val IMAGE_URI = "image_uri"
+
+        private const val REQUEST_IMAGE_CAPTURE = 11999
         private val REQUEST_READ_STORE_PERMISSION_CODE = 0
         private val REQUEST_WRITE_STORE_PERMISSION_CODE = 1
         private const val TAG = "EzImageSelectorActivity"
     }
 
     private val mIvBack: ImageView by lazy { findViewById(R.id.iv_back) }
-    private val mTvConfirm: TextView by lazy { findViewById(R.id.tv_confirm) }
 
     //    private val mHsvCategory: HorizontalScrollView by lazy { findViewById<HorizontalScrollView>(R.id.hsv_category) }
     private val mLlCategory: LinearLayout by lazy { findViewById(R.id.ll_category) }
@@ -55,7 +56,10 @@ open class EzImageSelectorActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_image_selector)
+        setContentView(R.layout.activity_single_image_selector)
+        mIvBack.setOnClickListener {
+            finish()
+        }
         //隐藏活动栏
         supportActionBar?.hide()
         //沉淀状态栏和导航栏
@@ -82,9 +86,6 @@ open class EzImageSelectorActivity : AppCompatActivity() {
 
             //ui显示
             showUI()
-
-            //设置结果
-            setResult(RESULT_CODE)
         }
     }
 
@@ -151,6 +152,7 @@ open class EzImageSelectorActivity : AppCompatActivity() {
     }
 
     private var mCategoryItemList = mutableListOf<TextView>()
+    private var mTakePictureUri: Uri? = null
 
     /**
      * 根据获得的照片显示UI
@@ -162,22 +164,22 @@ open class EzImageSelectorActivity : AppCompatActivity() {
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
                 )
                 marginLayoutParams.setMargins(
-                    SizeUtils.dp2px(this@EzImageSelectorActivity, 5F),
-                    SizeUtils.dp2px(this@EzImageSelectorActivity, 5F),
-                    SizeUtils.dp2px(this@EzImageSelectorActivity, 5F),
-                    SizeUtils.dp2px(this@EzImageSelectorActivity, 5F)
+                    SizeUtils.dp2px(this@EzSingleImageSelectorActivity, 5F),
+                    SizeUtils.dp2px(this@EzSingleImageSelectorActivity, 5F),
+                    SizeUtils.dp2px(this@EzSingleImageSelectorActivity, 5F),
+                    SizeUtils.dp2px(this@EzSingleImageSelectorActivity, 5F)
                 )
                 this.setPadding(
-                    SizeUtils.dp2px(this@EzImageSelectorActivity, 15F),
-                    SizeUtils.dp2px(this@EzImageSelectorActivity, 5F),
-                    SizeUtils.dp2px(this@EzImageSelectorActivity, 15F),
-                    SizeUtils.dp2px(this@EzImageSelectorActivity, 5F)
+                    SizeUtils.dp2px(this@EzSingleImageSelectorActivity, 15F),
+                    SizeUtils.dp2px(this@EzSingleImageSelectorActivity, 5F),
+                    SizeUtils.dp2px(this@EzSingleImageSelectorActivity, 15F),
+                    SizeUtils.dp2px(this@EzSingleImageSelectorActivity, 5F)
                 )
                 this.layoutParams = marginLayoutParams
 
                 setSelectStyle(this, false)
 
-                this.textSize = SizeUtils.sp2px(this@EzImageSelectorActivity, 6F).toFloat()
+                this.textSize = SizeUtils.sp2px(this@EzSingleImageSelectorActivity, 6F).toFloat()
                 this.text = key
                 if (key.contains("ezall")) {
                     this.text = context.getString(R.string.all_photo)
@@ -204,7 +206,7 @@ open class EzImageSelectorActivity : AppCompatActivity() {
                                 createImageFile()
                             } catch (ex: IOException) {
                                 Toast.makeText(
-                                    this@EzImageSelectorActivity,
+                                    this@EzSingleImageSelectorActivity,
                                     getString(R.string.takePhotoError),
                                     Toast.LENGTH_SHORT
                                 ).show()
@@ -212,10 +214,11 @@ open class EzImageSelectorActivity : AppCompatActivity() {
                             }
                             photoFile?.also {
                                 val photoURI = FileProvider.getUriForFile(
-                                    this@EzImageSelectorActivity,
-                                    "${this@EzImageSelectorActivity.packageName}.fileprovider",
+                                    this@EzSingleImageSelectorActivity,
+                                    "${this@EzSingleImageSelectorActivity.packageName}.fileprovider",
                                     it
                                 )
+                                mTakePictureUri = photoURI
                                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
                             }
@@ -223,6 +226,10 @@ open class EzImageSelectorActivity : AppCompatActivity() {
                     }
                 } else {
                     //选择了图片,可以退出activity
+                    ezPhotoBeans?.let {
+                        val ezPhotoBean = it[position - 1]
+                        exitActivityWithSetResult(ezPhotoBean.path)
+                    }
                 }
             }
         }
@@ -246,6 +253,7 @@ open class EzImageSelectorActivity : AppCompatActivity() {
                 }
                 //切换分类
                 photoAdapter.switchCategory(mCategoryItemList.indexOf(nowView))
+                mRvImagePreview.scrollToPosition(0)
             }
         }
     }
@@ -336,7 +344,7 @@ open class EzImageSelectorActivity : AppCompatActivity() {
     private fun createImageFile(): File {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val storeDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile("JPEG_${timeStamp}_", "jpg", storeDir).apply {
+        return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storeDir).apply {
             currentPhotoPath = absolutePath
         }
     }
@@ -344,17 +352,18 @@ open class EzImageSelectorActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            data?.extras?.let {
-                val imageBitmap = it.get("data") as Bitmap
-                Log.i(TAG, "onActivityResult: 获得图片,size为${imageBitmap.allocationByteCount}")
+            mTakePictureUri?.path?.let {
+                Log.i(TAG, "onActivityResult: 拍照获得的URI $it")
+                exitActivityWithSetResult(it)
             }
         }
     }
 
 
-    /**
-     * 设置确定按钮的样式和回调
-     */
-    open fun setConfirmButton(style: Int, onClick: () -> Unit) {
+    private fun exitActivityWithSetResult(uri: String) {
+        intent.putExtra(IMAGE_URI, uri)
+        setResult(RESULT_CODE, intent)
+        finish()
     }
+
 }

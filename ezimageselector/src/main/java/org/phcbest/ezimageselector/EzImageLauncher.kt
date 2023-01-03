@@ -14,10 +14,11 @@ private const val TAG = "EzImageLauncher"
 object EzImageLauncher {
 
 
+
     fun startSingleImageSelect(
         activityResultLauncher: ActivityResultLauncher<Intent>, context: Context
     ) {
-        val intent = Intent(context, EzImageSelectorActivity::class.java)
+        val intent = Intent(context, EzSingleImageSelectorActivity::class.java)
         activityResultLauncher.launch(intent)
     }
 }
