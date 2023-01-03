@@ -3,6 +3,7 @@ package org.phcbest.ezimageselector
 import android.content.Context
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
+import org.phcbest.ezimageselector.activity.EzSingleImageSelectorActivity
 
 /**
  * @author phcbest
@@ -12,7 +13,6 @@ import androidx.activity.result.ActivityResultLauncher
 private const val TAG = "EzImageLauncher"
 
 object EzImageLauncher {
-
 
 
     fun startSingleImageSelect(

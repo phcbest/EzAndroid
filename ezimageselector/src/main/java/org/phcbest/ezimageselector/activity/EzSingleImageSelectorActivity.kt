@@ -1,10 +1,9 @@
-package org.phcbest.ezimageselector
+package org.phcbest.ezimageselector.activity
 
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -28,6 +27,9 @@ import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import org.phcbest.ezimageselector.EzPhotoBean
+import org.phcbest.ezimageselector.R
+import org.phcbest.ezimageselector.SizeUtils
 import org.phcbest.ezimageselector.apapter.PhotoAdapter
 import java.io.File
 import java.io.IOException
@@ -152,7 +154,7 @@ open class EzSingleImageSelectorActivity : AppCompatActivity() {
     }
 
     private var mCategoryItemList = mutableListOf<TextView>()
-    private var mTakePictureUri: Uri? = null
+    private var mTakePictureUri: String? = null
 
     /**
      * 根据获得的照片显示UI
@@ -218,7 +220,7 @@ open class EzSingleImageSelectorActivity : AppCompatActivity() {
                                     "${this@EzSingleImageSelectorActivity.packageName}.fileprovider",
                                     it
                                 )
-                                mTakePictureUri = photoURI
+                                mTakePictureUri = photoFile.absolutePath
                                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
                             }
@@ -243,7 +245,6 @@ open class EzSingleImageSelectorActivity : AppCompatActivity() {
                 setSelectStyle(it, true)
             }
             mLlCategory.addView(it)
-
             it.setOnClickListener { nowView ->
                 mCategoryItemList.forEach { v ->
                     setSelectStyle(v, false)
@@ -331,8 +332,6 @@ open class EzSingleImageSelectorActivity : AppCompatActivity() {
             return ""
         }
         return strings[strings.size - 2]
-
-
     }
 
     private lateinit var currentPhotoPath: String
@@ -352,7 +351,8 @@ open class EzSingleImageSelectorActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            mTakePictureUri?.path?.let {
+
+            mTakePictureUri?.let {
                 Log.i(TAG, "onActivityResult: 拍照获得的URI $it")
                 exitActivityWithSetResult(it)
             }
