@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import org.phcbest.ezimageselector.EzPhotoBean
 import org.phcbest.ezimageselector.R
+import org.phcbest.ezimageselector.activity.EzSingleImageSelectorActivity
 
 /**
  * @author phcbest
@@ -24,7 +25,6 @@ abstract class PhotoAdapter(
     private var mPhotoCategoryMap: MutableMap<String, List<EzPhotoBean>>
 ) : RecyclerView.Adapter<PhotoAdapter.ViewHolder>() {
 
-    private var mMargin: Int = 3
 
     inner class ViewHolder(parent: ViewGroup, itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var parentWidth = parent.width
@@ -32,9 +32,16 @@ abstract class PhotoAdapter(
             ((parent as RecyclerView).layoutManager as StaggeredGridLayoutManager).spanCount
         val mIvImage: ImageView = itemView.findViewById<ImageView?>(R.id.iv_image).apply {
 
-            this.layoutParams.width = (parentWidth - mMargin * spanCount * 2) / spanCount
-            this.layoutParams.height = (parentWidth - mMargin * spanCount * 2) / spanCount
-            (this.layoutParams as MarginLayoutParams).setMargins(mMargin, mMargin, mMargin, mMargin)
+            this.layoutParams.width =
+                (parentWidth - EzSingleImageSelectorActivity.mMargin * spanCount * 2) / spanCount
+            this.layoutParams.height =
+                (parentWidth - EzSingleImageSelectorActivity.mMargin * spanCount * 2) / spanCount
+            (this.layoutParams as MarginLayoutParams).setMargins(
+                EzSingleImageSelectorActivity.mMargin,
+                EzSingleImageSelectorActivity.mMargin,
+                EzSingleImageSelectorActivity.mMargin,
+                EzSingleImageSelectorActivity.mMargin
+            )
         }
     }
 

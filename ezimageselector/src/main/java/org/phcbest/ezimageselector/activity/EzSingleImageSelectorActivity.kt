@@ -16,6 +16,7 @@ import android.util.Log
 import android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
 import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -47,6 +48,9 @@ open class EzSingleImageSelectorActivity : AppCompatActivity() {
         private val REQUEST_READ_STORE_PERMISSION_CODE = 0
         private val REQUEST_WRITE_STORE_PERMISSION_CODE = 1
         private const val TAG = "EzImageSelectorActivity"
+
+        //边距
+        var mMargin: Int = 3
     }
 
     private val mIvBack: ImageView by lazy { findViewById(R.id.iv_back) }
@@ -59,9 +63,12 @@ open class EzSingleImageSelectorActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_single_image_selector)
+        //
         mIvBack.setOnClickListener {
             finish()
         }
+        (mRvImagePreview.layoutParams as MarginLayoutParams).marginStart = mMargin
+        (mRvImagePreview.layoutParams as MarginLayoutParams).marginEnd = mMargin
         //隐藏活动栏
         supportActionBar?.hide()
         //沉淀状态栏和导航栏
