@@ -61,6 +61,7 @@ open class EzSingleImageSelectorActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        overridePendingTransition(R.anim.in_activity, R.anim.bottom_silent);
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_single_image_selector)
         //
@@ -96,6 +97,11 @@ open class EzSingleImageSelectorActivity : AppCompatActivity() {
             //ui显示
             showUI()
         }
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.bottom_silent, R.anim.out_activity);
     }
 
     private var mAllPhotoList = mutableListOf<EzPhotoBean>()
