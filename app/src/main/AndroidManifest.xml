@@ -17,6 +17,13 @@
         android:theme="@style/Theme.EzAndroid"
         tools:targetApi="31">
         <activity
+            android:name=".demo.EzMagnifier.EzMagnifierActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".demo.EzImageSelect.EzISActivity"
             android:exported="false">
             <meta-data

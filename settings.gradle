@@ -16,3 +16,4 @@ rootProject.name = "EzAndroid"
 include ':app'
 include ':EzPermissions'
 include ':EzImageSelector'
+include ':EzMagnifier'
